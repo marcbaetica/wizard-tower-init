@@ -1,0 +1,5 @@
+The default config is under:
+%userprofile%\.glzr\glazewm\config.yaml
+
+If .glzr does not exist, the folder will be created.
+
