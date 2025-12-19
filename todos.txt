@@ -1,0 +1,6 @@
+TODO:
+
+- do verification lib for checking if the config path exists for each item;
+- set up git submodule for glazewm;
+- clean up the glazewm repo;
+

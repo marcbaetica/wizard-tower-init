@@ -1,0 +1,111 @@
+Here’s the **short, to-the-point checklist** 👍
+
+---
+
+## Goal
+
+Clone a repo **with submodules**, get them **working immediately**, and keep them **updated automatically** (without global settings).
+
+---
+
+## Steps (run in order)
+
+### 1️⃣ Clone the parent repo
+
+```bash
+git clone <REPO_URL>
+cd <REPO_NAME>
+```
+
+---
+
+### 2️⃣ Pull all submodules (one-time)
+
+```bash
+git submodule update --init --recursive
+```
+
+👉 This downloads the submodules **now**.
+
+---
+
+### 3️⃣ Enable auto-update for this repo only
+
+```bash
+git config submodule.recurse true
+```
+
+👉 Stored in:
+
+```
+.git/config
+```
+
+Note: If --global is passed, it will be saved under ~/.gitconfig.
+
+👉 Makes `git pull` update submodules automatically **for this repo only**.
+
+---
+
+## That’s it.
+
+### After this:
+
+```bash
+git pull
+```
+
+✅ Parent repo updates
+✅ Submodules update automatically
+
+---
+
+## What NOT to do
+
+* ❌ Don’t edit or commit `.git/`
+* ❌ Don’t rely on `.gitattributes` for submodules
+* ❌ Don’t expect this to affect other people’s machines
+
+---
+
+## For other users
+
+They must run:
+
+```bash
+git submodule update --init --recursive
+```
+
+(or your setup script)
+
+---
+
+### Mental model
+
+* Step 2 = **fix now**
+* Step 3 = **prevent future problems**
+
+You’ve got it.
+
+
+Why .gitattributes cannot solve this
+
+Submodules are stored as gitlinks (commit pointers)
+
+.gitattributes only affects file handling
+
+Git intentionally separates:
+
+Behavior config → .git/config, ~/.gitconfig
+
+Content rules → .gitattributes
+
+This separation is a design choice, not a limitation.
+
+Correct mental model:
+Tool			Purpose
+.gitattributes		How files are treated
+.git/config		How Git behaves (local)
+~/.gitconfig		How Git behaves (global)
+README / scripts	Onboarding humans 
+
