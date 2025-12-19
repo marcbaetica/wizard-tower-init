@@ -1,0 +1,93 @@
+Prerequisites:
+
+
+1) Make sure the correct email address is configured. Otherwise, git commit history will not show up:
+git config --global user.email "you@example.com"
+git config --global user.name "Your Name"
+
+
+2) Create SSH key:
+## **1️⃣ Check for an existing SSH key**
+
+**Both Windows (Git Bash) and Linux:**
+```bash
+ls ~/.ssh
+```
+* If you see `id_ed25519` and `id_ed25519.pub`, you already have a key.
+* If not, generate one in step 2.
+
+## **2️⃣ Generate a new SSH key (if needed)**
+
+**Both Windows (Git Bash) and Linux:**
+```bash
+ssh-keygen -t ed25519 -C "your_email@example.com"
+# Press Enter for defaults, optionally add a passphrase
+```
+
+## **3️⃣ Start ssh-agent and add your key**
+
+**Both Windows (Git Bash) and Linux:**
+```bash
+# Start ssh-agent
+eval "$(ssh-agent -s)"
+# Add your SSH key
+ssh-add ~/.ssh/id_ed25519
+```
+> **Difference:**
+>
+> * Windows can use the **OpenSSH Authentication Agent service** to auto-start.
+> * Linux usually needs the `eval` commands in `~/.bashrc` or `~/.zshrc` for persistence.
+
+## **4️⃣ Copy the public key**
+
+**Windows:**
+```bash
+clip < ~/.ssh/id_ed25519.pub
+```
+**Linux:**
+```bash
+# Make sure xclip is installed: sudo apt install xclip
+xclip -selection clipboard < ~/.ssh/id_ed25519.pub
+```
+* Paste this key in **GitHub → Settings → SSH and GPG keys → New SSH key**.
+
+## **5️⃣ Configure your Git repo to use SSH**
+
+**Both Windows (Git Bash) and Linux:**
+```bash
+git remote set-url origin git@github.com:username/repo.git
+```
+Replace `username` and `repo` with your repository details.
+
+## **6️⃣ Test the SSH connection**
+
+**Both Windows (Git Bash) and Linux:**
+```bash
+ssh -T git@github.com
+```
+Expected output:
+```
+Hi username! You've successfully authenticated, but GitHub does not provide shell access.
+```
+
+## **7️⃣ Push without credentials**
+
+**Both Windows (Git Bash) and Linux:**
+```bash
+git push -u origin main
+```
+
+* No popups or password prompts.
+* Done!
+
+---
+
+### ✅ Summary of OS differences
+
+| Step              | Windows                              | Linux                                                |
+| ----------------- | ------------------------------------ | ---------------------------------------------------- |
+| Agent persistence | OpenSSH Authentication Agent service | Add `eval` lines in shell config                     |
+| Copy key          | `clip < ~/.ssh/id_ed25519.pub`       | `xclip -selection clipboard < ~/.ssh/id_ed25519.pub` |
+| Default shell     | Git Bash                             | Bash / Zsh                                           |
+
+---
