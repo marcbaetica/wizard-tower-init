@@ -51,15 +51,26 @@ xclip -selection clipboard < ~/.ssh/id_ed25519.pub
 ```
 * Paste this key in **GitHub → Settings → SSH and GPG keys → New SSH key**.
 
-## **5️⃣ Configure your Git repo to use SSH**
+## **5️⃣ Configure your Git repo to use SSH instead of the default https upon init**
 
 **Both Windows (Git Bash) and Linux:**
 ```bash
 git remote set-url origin git@github.com:username/repo.git
 ```
 Replace `username` and `repo` with your repository details.
+To see the current set of origin, use:
+```
+$ git remote -v
+origin  https://github.com/marcbaetica/wizard-tower-init.git (fetch)
+origin  https://github.com/marcbaetica/wizard-tower-init.git (push)
+After switch:
+$ git remote -v
+origin  git@github.com:marcbaetica/wizard-tower-init.git (fetch)
+origin  git@github.com:marcbaetica/wizard-tower-init.git (push)
 
-## **6️⃣ Test the SSH connection**
+```
+
+## **6️⃣ Test the SSH connection and add GitHub fingerprint to known hosts folder**
 
 **Both Windows (Git Bash) and Linux:**
 ```bash
@@ -68,6 +79,13 @@ ssh -T git@github.com
 Expected output:
 ```
 Hi username! You've successfully authenticated, but GitHub does not provide shell access.
+$ vi ~/.ssh/known_hosts  # where ssh computes the public host key that it receives from github and stores it as a fingerprint (sha256 computation of the public host key) to prevent future man in the middle attacks.
+To bypass the explicit yes to add the github fingerprint:
+$ ssh -o StrictHostKeyChecking=no -T git@github.com  # This is safe because github doesn't change often.
+Warning: Permanently added 'github.com,140.82.112.4' (ECDSA) to the list of known hosts.
+Hi username! You've successfully authenticated, but GitHub does not provide shell access.
+The only real vulnerability here is the “first‑connection problem” and that is a general in SSH connection vulnerability.
+
 ```
 
 ## **7️⃣ Push without credentials**
