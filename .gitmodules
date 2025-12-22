@@ -1,0 +1,3 @@
+[submodule "glazewm-config"]
+	path = glazewm-config
+	url = git@github.com:marcbaetica/glazewm-config.git
