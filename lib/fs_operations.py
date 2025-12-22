@@ -4,6 +4,9 @@ import sys
 import shutil
 from pathlib import Path
 
+# 3rd-party libs.
+# from pprintpp import pprint   # TODO: See if needed.
+
 # Application libs.
 # TODO: Clean this up later!
 try:
@@ -18,6 +21,7 @@ except ModuleNotFoundError as e:
 
 def create_folder(path: Path) -> bool:
     path = path.resolve()
+    print(f'Creating folders under path: [{path}]')
     if path.exists():
         return False
     else:
@@ -28,9 +32,21 @@ def create_folder(path: Path) -> bool:
         return True
 
 
+def _is_safe_to_delete(path: Path) -> bool:
+    path = path.resolve()
+    if HOME_PATH == path or path in HOME_PATH.parents:
+        print(HOME_PATH, type(HOME_PATH))
+        print(path, type(path))
+        print(path.parents, type(path.parents))
+        return False
+    return True
+
+
 def delete_path_if_exists(path: Path) -> bool:
     path = path.resolve()
     print(f'Attempting to delete item(s) at path: [{path}].')
+    if not _is_safe_to_delete(path):
+        raise DeleteError("Refusing to delete home directory [{path}].")
     if not path.exists():
         print('Nothing to remove.')
         return True
@@ -53,10 +69,24 @@ def _delete_path(path: Path) -> bool:
     return True
 
 
-# create folder -> Done!
-# detele file   -> Done!
+def copy_path(src: Path, dest: Path) -> None:
+    src = src.resolve()
+    dest = dest.resolve()
+    print(f'Attempting to copy [{src}] to [{dest}].')
+    delete_path_if_exists(dest)
+    # If file:
+    try:
+        shutil.copytree(src, dest, dirs_exist_ok=True)
+    except FileExistsError:
+        delete_path_if_exists(dest)
+        shutil.copytree(src, dest, dirs_exist_ok=True)
+    shutil.copytree(src, dest)
 
-from pprint import pprint
+
+# create folder                 -> Done!
+# detele folder & parent dirs   -> Done!
+# copy folder
+
 
 files_of_interest = ['.glzr', '', '']
 
@@ -69,7 +99,13 @@ if __name__ == '__main__':
     '''
     curr_folder = Path(__file__).resolve().parent
     new_folder = Path(curr_folder, 'lala')
+    deep_new_folder = Path(new_folder, 'lala2')
     print(curr_folder)
     print(new_folder)
-    create_folder(new_folder)
+    print(deep_new_folder)
+    create_folder(deep_new_folder)
     delete_path_if_exists(new_folder)
+    print(HOME_PATH)
+    print(type(HOME_PATH))
+
+    
