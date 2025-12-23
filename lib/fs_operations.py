@@ -19,6 +19,13 @@ except ModuleNotFoundError as e:
     from exceptions import CreateError, DeleteError
 
 
+def log_if_path_exists(path: Path) -> None:
+    if path.exists():
+        print(f'Resource already exists at [{path}].')
+    else:
+        print(f'No resource found at [{path}].')
+
+
 def create_folder(path: Path) -> bool:
     path = path.resolve()
     print(f'Creating folders under path: [{path}]')
@@ -73,8 +80,9 @@ def copy_path(src: Path, dest: Path) -> None:
     src = src.resolve()
     dest = dest.resolve()
     print(f'Attempting to copy [{src}] to [{dest}].')
-    delete_path_if_exists(dest)
     # If file:
+    if dest.is_file():
+        delete_path_if_exists(dest)
     try:
         shutil.copytree(src, dest, dirs_exist_ok=True)
     except FileExistsError:
@@ -96,7 +104,6 @@ if __name__ == '__main__':
     print(HOME_PATH)
     print('Test!')
     pprint(os.listdir(HOME_PATH))
-    '''
     curr_folder = Path(__file__).resolve().parent
     new_folder = Path(curr_folder, 'lala')
     deep_new_folder = Path(new_folder, 'lala2')
@@ -107,5 +114,5 @@ if __name__ == '__main__':
     delete_path_if_exists(new_folder)
     print(HOME_PATH)
     print(type(HOME_PATH))
+    '''
 
-    

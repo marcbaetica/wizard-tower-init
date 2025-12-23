@@ -10,6 +10,22 @@ from lib.fs_operations import create_folder, copy_path, delete_path_if_exists, l
 # 3rd-party libs.
 
 
+def p(item):
+    print(type(item), item)
+
+CONFIG_FOLDERS_TO_DELETE = {
+            'glazewm': '.glzr',
+            'neovim': 'nvim'
+        }
+
+p(CONFIG_FOLDERS_TO_DELETE)
+
+from pprint import pprint
+items_in_home = [item for item in os.listdir(Path(HOME_PATH, 'AppData', 'Local').resolve()) if 'nvim' in item]
+# pprint(os.listdir(Path(HOME_PATH, 'AppData', 'Local').resolve()))
+# pprint(items_in_home)
+# ['nvim', 'nvim-data']
+
 # GlazeMW
 # c:\Users\User\.glzr\glazewm\config.yaml
 # delete c:\Users\User\.glzr or HOME_PATH\.glzr
@@ -19,6 +35,8 @@ from lib.fs_operations import create_folder, copy_path, delete_path_if_exists, l
 # check if config.yaml file exists
 from pprint import pprint
 
+
+'''
 print(HOME_PATH)
 print(GLAZEWM_CONFIG_FILE_PATH)
 print(GLAZEWM_CONFIG_PATH)
@@ -33,3 +51,7 @@ log_if_path_exists(NEW_GLAZE_CONFIG_FOLDER_PATH)  # TODO: Flagged as a file curr
 copy_path(NEW_GLAZE_CONFIG_FOLDER_PATH, HOME_PATH)
 log_if_path_exists(GLAZEWM_CONFIG_FILE_PATH)
 log_if_path_exists(GLAZEWM_CONFIG_PATH)
+'''
+
+
+
