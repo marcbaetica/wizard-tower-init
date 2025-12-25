@@ -1,60 +1,31 @@
-Here’s the **short, to-the-point checklist** 👍
+HOW TO USE:
 
----
 
 ## Goal
-
-Clone a repo **with submodules**, get them **working immediately**, and keep them **updated automatically** (without global settings).
+# Clone a repo **with submodules**, get them **working immediately**, and keep them **updated automatically** (without global settings).
 
 ---
 
 ## Steps (run in order)
 
 ### 1️⃣ Clone the parent repo
-
-```bash
 git clone <REPO_URL>
 cd <REPO_NAME>
-```
-
----
 
 ### 2️⃣ Pull all submodules (one-time)
-
-```bash
 git submodule update --init --recursive
-```
-
-👉 This downloads the submodules **now**.
-
----
+# 👉 This downloads the submodules **now**.
 
 ### 3️⃣ Enable auto-update for this repo only
-
-```bash
 git config submodule.recurse true
-```
+# 👉 Stored in: .git/config
+# Note: If --global is passed, it will be saved under ~/.gitconfig.
+# 👉 Makes `git pull` update submodules automatically **for this repo only**.
 
-👉 Stored in:
-
-```
-.git/config
-```
-
-Note: If --global is passed, it will be saved under ~/.gitconfig.
-
-👉 Makes `git pull` update submodules automatically **for this repo only**.
-
----
-
-## That’s it.
 
 ### After this:
 
-```bash
 git pull
-```
-
 ✅ Parent repo updates
 ✅ Submodules update automatically
 
@@ -70,153 +41,79 @@ git pull
 
 ## For other users
 
-They must run:
-
-```bash
+# They must run:
 git submodule update --init --recursive
-```
-
 (or your setup script)
 
----
-
-### Mental model
-
-* Step 2 = **fix now**
-* Step 3 = **prevent future problems**
-
-You’ve got it.
 
 
-Why .gitattributes cannot solve this
 
-Submodules are stored as gitlinks (commit pointers)
+WHY .gitattributes CANNOT SOLVE THIS?
+
+
+Submodules are stored as gitlinks (commit pointers).
 
 .gitattributes only affects file handling
 
 Git intentionally separates:
-
 Behavior config → .git/config, ~/.gitconfig
-
 Content rules → .gitattributes
 
-This separation is a design choice, not a limitation.
 
-Correct mental model:
-Tool			Purpose
-.gitattributes		How files are treated
-.git/config		How Git behaves (local)
-~/.gitconfig		How Git behaves (global)
-README / scripts	Onboarding humans 
+TOOL                PURPOSE
+.gitattributes      How files are treated.
+.git/config         How Git behaves (local).
+~/.gitconfig        How Git behaves (global).
+README / scripts    Onboarding humans.
 
 
 
 
-
-
-
-
-
-
-
-
-
-Got it! You want to add **Repo 2** as a **submodule** inside **Repo A**. I’ll walk you through it step by step.
-
----
+STEPS TO ADD **Repo B** AS A **submodule** INSIDE **Repo A**:
 
 ### **Step 1: Navigate to your main repo (A)**
-
-Open your terminal and go to the root of your repo:
-
-```bash
 cd /path/to/repoA
-```
-
----
 
 ### **Step 2: Add the submodule**
-
-Use the `git submodule add` command:
-
-```bash
-git submodule add <URL-of-repo-2> <path/inside/repoA>
-```
-
-* `<URL-of-repo-2>` → the HTTPS or SSH URL of Repo 2.
-* `<path/inside/repoA>` → the folder where you want Repo 2 to live inside Repo A, e.g., `submodules/repo2`.
+# Use the `git submodule add` command:
+git submodule add <URL-of-repo-B> <path/inside/repoA>
+* `<URL-of-repo-B>` → the HTTPS or SSH URL of Repo B.
+* `<path/inside/repoA>` → the folder where you want Repo B to live inside Repo A, e.g., `submodules/repoB`.
 
 Example:
-
-```bash
-git submodule add https://github.com/username/repo2.git submodules/repo2
-```
-
----
+git submodule add https://github.com/username/repoB.git submodules/repoB
 
 ### **Step 3: Initialize and update the submodule**
-
-After adding, run:
-
-```bash
 git submodule update --init --recursive
-```
-
-This makes sure the submodule is properly checked out.
-
----
+# This makes sure the submodule is properly checked out.
 
 ### **Step 4: Commit changes in Repo A**
-
-Adding a submodule changes your `.gitmodules` file and adds a commit in the main repo:
-
-```bash
-git add .gitmodules submodules/repo2
-git commit -m "Add Repo 2 as a submodule"
+# Adding a submodule changes your `.gitmodules` file and adds a commit in the main repo:
+git add .gitmodules submodules/repoB
+git commit -m "Add Repo B as a submodule"
 git push
-```
-
----
 
 ### **Step 5: Cloning Repo A with submodules (for the future)**
-
-If someone clones Repo A later, they need to do:
-
-```bash
+# If someone clones Repo A later, they need to do:
 git clone --recursive <URL-of-repoA>
-```
-
-Or, if they already cloned without `--recursive`:
-
-```bash
+# Or, if they already cloned without `--recursive`:
 git submodule update --init --recursive
-```
 
----
+✅ **Tip:** Submodules always point to a specific commit of the sub-repo, so updates in Repo B don’t automatically appear in Repo A. You have to go into the submodule, pull changes, and commit the updated pointer in Repo A.
 
-✅ **Tip:** Submodules always point to a specific commit of the sub-repo, so updates in Repo 2 don’t automatically appear in Repo A. You have to go into the submodule, pull changes, and commit the updated pointer in Repo A.
-
----
-
-If you want, I can also show a **shortcut workflow to update the submodule whenever Repo 2 changes**, which many people forget. Do you want me to show that?
-
-
-
-
+If you want, I can also show a **shortcut workflow to update the submodule whenever Repo B changes**, which many people forget. Do you want me to show that?
 
 
 
 
 Ah, I get why it feels annoying! The “manual work” with submodules is one of the biggest frustrations for people. But there’s a reason Git works this way:
 
----
-
 ### **Why submodules are manual**
 
 1. **Submodules are meant to track a specific commit, not a branch automatically.**
 
-   * This ensures **stability**. Your main repo (Repo A) always points to a known version of the sub-repo (Repo 2).
-   * If it automatically pulled the latest commit, a new commit in Repo 2 could **break your code in Repo A** unexpectedly.
+   * This ensures **stability**. Your main repo (Repo A) always points to a known version of the sub-repo (Repo B).
+   * If it automatically pulled the latest commit, a new commit in Repo B could **break your code in Repo A** unexpectedly.
 
 2. **Flexibility over convenience.**
 
@@ -225,7 +122,7 @@ Ah, I get why it feels annoying! The “manual work” with submodules is one of
 
 3. **Separate repositories = separate history.**
 
-   * Repo 2 is its own repo with its own branches and commits.
+   * Repo B is its own repo with its own branches and commits.
    * Git treats it like a “pointer” inside Repo A rather than merging histories automatically.
 
 ---
@@ -236,7 +133,7 @@ Ah, I get why it feels annoying! The “manual work” with submodules is one of
 
    * Pulls the other repo’s content directly into your repo.
    * Updates can be merged with a single command, no submodule pointers.
-   * Drawback: you duplicate Repo 2’s history in Repo A.
+   * Drawback: you duplicate Repo B’s history in Repo A.
 
 2. **Scripts/automation**
 
